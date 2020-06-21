@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image } from 'react-native';
+import { Image, Alert } from 'react-native';
 
 import api from '../../services/api';
 import formatValue from '../../utils/formatValue';
@@ -32,7 +32,18 @@ const Favorites: React.FC = () => {
 
   useEffect(() => {
     async function loadFavorites(): Promise<void> {
-      // Load favorite foods from api
+      try {
+        const { data } = await api.get<Food[]>('favorites');
+
+        setFavorites(
+          data.map(x => ({ ...x, formattedPrice: formatValue(x.price) })),
+        );
+      } catch (error) {
+        Alert.alert(
+          'Algo deu errado',
+          'Não foi possível carregar seus favoritos. Por favor, tente novamente ',
+        );
+      }
     }
 
     loadFavorites();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, ScrollView, Alert } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
@@ -43,6 +43,11 @@ interface Category {
   image_url: string;
 }
 
+interface SearchQueryParams {
+  category_like?: number;
+  name_like?: string;
+}
+
 const Dashboard: React.FC = () => {
   const [foods, setFoods] = useState<Food[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -54,12 +59,33 @@ const Dashboard: React.FC = () => {
   const navigation = useNavigation();
 
   async function handleNavigate(id: number): Promise<void> {
-    // Navigate do ProductDetails page
+    navigation.navigate('FoodDetails', { id });
   }
 
   useEffect(() => {
     async function loadFoods(): Promise<void> {
-      // Load Foods from API
+      try {
+        const params: SearchQueryParams = {};
+
+        if (selectedCategory) {
+          params.category_like = selectedCategory;
+        }
+
+        if (searchValue) {
+          params.name_like = searchValue.trim();
+        }
+
+        const { data } = await api.get<Food[]>('foods', { params });
+
+        setFoods(() =>
+          data.map(x => ({ ...x, formattedPrice: formatValue(x.price) })),
+        );
+      } catch (err) {
+        Alert.alert(
+          'Ops...',
+          'Não foi possível buscar os pratos. Por favor, tente novamente',
+        );
+      }
     }
 
     loadFoods();
@@ -67,14 +93,23 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadCategories(): Promise<void> {
-      // Load categories from API
+      try {
+        const { data } = await api.get<Category[]>('categories');
+
+        setCategories(data);
+      } catch (err) {
+        Alert.alert(
+          'Ops...',
+          'Não foi possível carregar as categorias. Por favor, tente novamente',
+        );
+      }
     }
 
     loadCategories();
   }, []);
 
   function handleSelectCategory(id: number): void {
-    // Select / deselect category
+    setSelectedCategory(selectedCategory === id ? undefined : id);
   }
 
   return (

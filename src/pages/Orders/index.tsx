@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image } from 'react-native';
+import { Image, Alert } from 'react-native';
 
 import api from '../../services/api';
 import formatValue from '../../utils/formatValue';
@@ -18,21 +18,32 @@ import {
   FoodPricing,
 } from './styles';
 
-interface Food {
+export interface Product {
   id: number;
   name: string;
   description: string;
   price: number;
-  formattedValue: number;
   thumbnail_url: string;
+  formattedValue: string;
 }
 
 const Orders: React.FC = () => {
-  const [orders, setOrders] = useState<Food[]>([]);
+  const [orders, setOrders] = useState<Product[]>([]);
 
   useEffect(() => {
     async function loadOrders(): Promise<void> {
-      // Load orders from API
+      try {
+        const { data } = await api.get<Product[]>('orders');
+
+        setOrders(
+          data.map(x => ({ ...x, formattedValue: formatValue(x.price) })),
+        );
+      } catch (error) {
+        Alert.alert(
+          'Algo deu errado',
+          'Não foi possível buscar seus pedidos. Por favor, tente novamente',
+        );
+      }
     }
 
     loadOrders();
@@ -59,7 +70,7 @@ const Orders: React.FC = () => {
               <FoodContent>
                 <FoodTitle>{item.name}</FoodTitle>
                 <FoodDescription>{item.description}</FoodDescription>
-                <FoodPricing>{item.formattedPrice}</FoodPricing>
+                <FoodPricing>{item.formattedValue}</FoodPricing>
               </FoodContent>
             </Food>
           )}
