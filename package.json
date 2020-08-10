@@ -52,7 +52,7 @@
     "eslint-plugin-react-hooks": "4.0.8",
     "jest": "26.2.2",
     "json-server": "0.16.1",
-    "metro-react-native-babel-preset": "0.61.0",
+    "metro-react-native-babel-preset": "0.62.0",
     "prettier": "2.0.5",
     "react-test-renderer": "16.13.1",
     "supertest": "4.0.2",
