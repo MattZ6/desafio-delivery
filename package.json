@@ -16,7 +16,7 @@
     "@react-navigation/stack": "5.9.3",
     "@testing-library/jest-native": "3.4.3",
     "@testing-library/react-native": "7.1.0",
-    "axios": "0.20.0",
+    "axios": "0.21.0",
     "intl": "1.2.5",
     "react": "17.0.1",
     "react-native": "0.63.3",
