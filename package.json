@@ -20,7 +20,7 @@
     "intl": "1.2.5",
     "react": "17.0.1",
     "react-native": "0.63.3",
-    "react-native-gesture-handler": "1.8.0",
+    "react-native-gesture-handler": "1.9.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "2.15.0",
     "react-native-vector-icons": "7.1.0",
